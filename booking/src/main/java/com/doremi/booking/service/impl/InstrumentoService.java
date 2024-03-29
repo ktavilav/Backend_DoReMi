@@ -60,13 +60,14 @@ public class InstrumentoService implements IInstrumentoService {
 
             instrumentoARegistrar.setCategoria(categoria);
 
-
             Instrumento instrumentoAgregado = instrumentoRepository.save(instrumentoARegistrar);
 
             LOGGER.info("instrumento agregado -> " + instrumentoAgregado);
 
             List<Imagen> imagen = imagenRepository.saveAll(mapToEntityImagenList(instrumento.getImagen(), instrumentoAgregado.getInstrumento_id()));
             LOGGER.info("Imagen guardada -> " + imagen);
+
+            instrumentoAgregado.setImagenes(imagen);
 
             InstrumentoSalidaDto instrumentoSalidaDto = maptoDtoSalida(instrumentoAgregado);
 
@@ -146,12 +147,16 @@ public class InstrumentoService implements IInstrumentoService {
 
             instrumentoARegistrar.setCategoria(categoria);
 
-            instrumentoSalidaDto = mapEntitytoDtoSalida(instrumentoRepository.save (instrumentoARegistrar));
+            Instrumento instrumentoAgregado = (instrumentoRepository.save (instrumentoARegistrar));
 
-            LOGGER.info("El instrumento: {}, fue modificado exitosamente", instrumentoSalidaDto);
+            LOGGER.info("El instrumento: {}, fue modificado exitosamente", instrumentoAgregado);
 
-            List<Imagen> imagen = imagenRepository.saveAll (mapToEntityImagenList(instrumentoModificado.getImagen(),instrumentoSalidaDto.getInstrumento_id()));
+            List<Imagen> imagen = imagenRepository.saveAll (mapToEntityImagenList(instrumentoModificado.getImagen(),instrumentoAgregado.getInstrumento_id()));
             LOGGER.info("Imagen guardada -> " + imagen);
+
+            instrumentoAgregado.setImagenes(imagen);
+
+            instrumentoSalidaDto = maptoDtoSalida(instrumentoAgregado);
 
             LOGGER.info("Instrumento guardado: {}", instrumentoSalidaDto);
 
@@ -231,7 +236,12 @@ public class InstrumentoService implements IInstrumentoService {
     }
 
     public InstrumentoSalidaDto mapEntitytoDtoSalida(Instrumento instrumento){
-        return modelMapper.map(instrumento, InstrumentoSalidaDto.class);
+        InstrumentoSalidaDto instrumentoSalida = modelMapper.map(instrumento, InstrumentoSalidaDto.class);
+        instrumentoSalida.setImagen(instrumento.getImagenes().stream()
+                .map(imagen -> new ImagenSalidaDto(imagen.getImagen_id(), imagen.getTitulo(), imagen.getUrl()))
+                .collect(Collectors.toList()));
+
+        return instrumentoSalida;
     }
 
 
