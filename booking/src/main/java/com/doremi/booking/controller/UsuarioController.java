@@ -87,5 +87,20 @@ public class UsuarioController {
 
             return ResponseEntity.notFound().build(); // Instrumento no encontrado, respuesta 404
         }}
+        @Operation(summary = "Buscar usuario por Username")
+        @ApiResponses(value = {
+                @ApiResponse(responseCode = "200", description = "Usuario encontrado exitosamente",
+                        content = {@Content(mediaType = "application/json",
+                                schema = @Schema(implementation = UsuarioSalidaDTO.class))}),
+                @ApiResponse(responseCode = "400", description = "Username no encontrado",
+                        content = @Content),
+                @ApiResponse(responseCode = "404", description = "Usuario no encontrado",
+                        content = @Content),
+                @ApiResponse(responseCode = "500", description = "Server error",
+                        content = @Content)
+        })
+        @GetMapping("buscarPorUsername/{username}")
+        public ResponseEntity<?> buscarPorUsername(@PathVariable String username) throws ResourceNotFoundException{
+            return new ResponseEntity<> (usuarioService.buscarUsuarioPorUsername(username), HttpStatus.OK);}
 
 }
