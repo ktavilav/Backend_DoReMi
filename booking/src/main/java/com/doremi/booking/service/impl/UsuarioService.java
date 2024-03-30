@@ -51,6 +51,15 @@ public class UsuarioService implements IUsuarioService{
           // Mapear el usuario actualizado a un DTO de salida y devolverlo
           return maptoDtoSalidaUsuario(usuario);
       }
+      @Override
+    public UsuarioSalidaDTO buscarUsuarioPorUsername(String username) throws ResourceNotFoundException {
+        User usuarioAbuscar = userRepository.findByUsername(username).orElse(null);
+        if (usuarioAbuscar != null){
+            return maptoDtoSalidaUsuario(usuarioAbuscar);
+        }else{
+            LOGGER.error("No se encuentra el usuario con el username: {}", username);
+        throw new ResourceNotFoundException("El Usuario no esta con el username" + username);}
+    }
 
     private UsuarioSalidaDTO maptoDtoSalidaUsuario(User usuario) {
         return modelMapper.map(usuario, UsuarioSalidaDTO.class);
@@ -65,6 +74,8 @@ public class UsuarioService implements IUsuarioService{
             LOGGER.error("No se encuentra el usuario con el ID: {}", id);
         throw new ResourceNotFoundException("El Usuario no esta con el id" + id);}
     }
+
+    
 
     
     
