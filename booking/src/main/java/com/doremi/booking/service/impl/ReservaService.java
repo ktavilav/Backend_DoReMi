@@ -147,4 +147,25 @@ public class ReservaService implements IReservaService {
     private Instrumento maptoDtoSalidaAInstrumento(InstrumentoSalidaDto instrumentoSalidaDTO) {
         return modelMapper.map(instrumentoSalidaDTO, Instrumento.class);
     }
+
+    @Override
+    public ReservaSalidaDto buscarReservaPorFechas(LocalDate fechaInicial, LocalDate fechaFinal)
+        throws ResourceNotFoundException {
+    Reserva reservaABuscar = reservaRepository.findByFechaInicialAndFechaFinal(fechaInicial, fechaFinal);
+
+    if (reservaABuscar != null) {
+        LOGGER.info("Se ha encontrado una reserva con las fechas: {} - {}", fechaInicial, fechaFinal);
+        return mapEntityToDtoSalida(reservaABuscar);
+    } else {
+        LOGGER.error("No se encontró ninguna reserva para las fechas: {} - {}", fechaInicial, fechaFinal);
+        throw new ResourceNotFoundException("No se encontró ninguna reserva para las fechas: " + fechaInicial + " - " + fechaFinal);
+    }
+}
+
+private ReservaSalidaDto mapEntityToDtoSalida(Reserva reserva) {
+    return modelMapper.map(reserva, ReservaSalidaDto.class);
+}
+
+
+
 }

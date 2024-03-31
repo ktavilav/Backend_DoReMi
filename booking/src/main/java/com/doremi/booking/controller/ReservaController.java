@@ -15,10 +15,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -63,4 +65,24 @@ public class ReservaController {
     public ResponseEntity<List<ReservaSalidaDto>> listarReservas() throws ResourceNotFoundException {
         return new ResponseEntity<>(reservaService.listarReservas(), HttpStatus.OK);
     }
+    @Operation(summary = "Buscar reserva por fecha")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Reserva encontrada exitosamente",
+                content = {@Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ReservaSalidaDto.class))}),
+        @ApiResponse(responseCode = "400", description = "Reservas no encontradas",
+                content = @Content),
+        @ApiResponse(responseCode = "404", description = "Reservas no encontrado",
+                content = @Content),
+        @ApiResponse(responseCode = "500", description = "Server error",
+                content = @Content)
+})
+@GetMapping("buscarReservaPorFecha/{fechaInicial}/{fechaFinal}")
+public ResponseEntity<?> buscarReservaPorFecha(@PathVariable("fechaInicial") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicial,
+                                                @PathVariable("fechaFinal") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFinal) throws ResourceNotFoundException {
+    return new ResponseEntity<>(reservaService.buscarReservaPorFechas(fechaInicial, fechaFinal), HttpStatus.OK);
+}
+
+
+
 }

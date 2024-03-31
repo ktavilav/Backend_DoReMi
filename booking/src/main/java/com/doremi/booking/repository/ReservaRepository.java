@@ -10,4 +10,6 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     List<Reserva> findReservasByInstrumento(Instrumento instrumento);
 
+    Reserva findByFechaInicialAndFechaFinal(LocalDate fechaInicial, LocalDate fechaFinal);
+
 }
