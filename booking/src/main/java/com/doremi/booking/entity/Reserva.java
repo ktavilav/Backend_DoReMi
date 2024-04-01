@@ -26,7 +26,7 @@ public class Reserva {
     private User usuario;
 
     @ManyToOne (fetch = FetchType.LAZY)
-    @JoinColumn(name = "instrumento_id")
+    @JoinColumn(name = "instrumento_id" , referencedColumnName = "instrumento_id")
     private Instrumento instrumento;
 
     private LocalDate fechaInicial;
@@ -40,6 +40,16 @@ public class Reserva {
         this.instrumento = instrumento;
         this.fechaInicial = fechaInicial;
         this.fechaFinal = fechaFinal;
+    }
+
+    public void setInstrumento(Instrumento instrumento) {
+        this.instrumento = instrumento;
+    }
+
+    public Instrumento getInstrumento() {
+        return instrumento;
+
+
     }
 }
 

@@ -63,4 +63,21 @@ public class ReservaController {
     public ResponseEntity<List<ReservaSalidaDto>> listarReservas() throws ResourceNotFoundException {
         return new ResponseEntity<>(reservaService.listarReservas(), HttpStatus.OK);
     }
+
+    @Operation(summary = "Buscar reservas por Id del instrumento")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Reservas encontradas exitosamente",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ReservaSalidaDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Id no encontrado",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Reservas no encontradas",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Server error",
+                    content = @Content)
+    })
+    @GetMapping("buscarPorInstrumento/{idInstrumento}")
+    public ResponseEntity<List<ReservaSalidaDto>> buscarReservasPorInstrumento(@PathVariable Long idInstrumento) throws ResourceNotFoundException{
+       return new ResponseEntity<>(reservaService.buscarReservasPorInstrumento(idInstrumento), HttpStatus.OK);
+    }
 }

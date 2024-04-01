@@ -14,4 +14,6 @@ public interface IReservaService {
     ReservaSalidaDto reservarInstrumento (ReservaEntradaDto reserva) throws BadRequestException, ResourceNotFoundException;
 
     List<ReservaSalidaDto> listarReservas () throws ResourceNotFoundException ;
+
+    List<ReservaSalidaDto> buscarReservasPorInstrumento (Long instrumentoId) throws ResourceNotFoundException;
 }
