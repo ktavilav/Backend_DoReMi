@@ -1,5 +1,6 @@
 package com.doremi.booking.service.impl;
 
+import com.doremi.booking.dto.entrada.modificacion.InstrumentoModificacionEntradaDto;
 import com.doremi.booking.dto.entrada.reseva.ReservaEntradaDto;
 import com.doremi.booking.dto.salida.Usuario.UsuarioSalidaDTO;
 import com.doremi.booking.dto.salida.instrumento.InstrumentoSalidaDto;
@@ -11,8 +12,12 @@ import com.doremi.booking.entity.Reserva;
 import com.doremi.booking.entity.User;
 import com.doremi.booking.exceptions.BadRequestException;
 import com.doremi.booking.exceptions.ResourceNotFoundException;
+import com.doremi.booking.repository.InstrumentoRepository;
 import com.doremi.booking.repository.ReservaRepository;
 import com.doremi.booking.service.IReservaService;
+
+import lombok.RequiredArgsConstructor;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.slf4j.Logger;
@@ -47,11 +52,14 @@ public class ReservaService implements IReservaService {
         this.usuarioService = usuarioService;
     }
 
+    
+
    /*@Override
     public Boolean fechasDisponibles(Long instrumentoId, LocalDate fechaInicial, LocalDate fechaFinal){
         List<Reserva> reservas = reservaRepository.findByInstrumento_IdAndFechaInicialBetweenAndFechaFinalBetween(instrumentoId, fechaInicial, fechaFinal);
         return reservas.isEmpty();
     }*/
+
 
     @Override
     public ReservaSalidaDto reservarInstrumento(ReservaEntradaDto reservaEntradaDto) throws BadRequestException, ResourceNotFoundException {
@@ -123,6 +131,19 @@ public class ReservaService implements IReservaService {
 
         return reserva;
     }
+    @Override
+     public List<InstrumentoSalidaDto> buscarInstrumentosDisponibles(String nombre, LocalDate fechaInicial, LocalDate fechaFinal) throws ResourceNotFoundException {
+         List<Instrumento> instrumentosDisponibles = reservaRepository.findInstrumentosDisponibles(nombre, fechaInicial, fechaFinal);
+         if(!instrumentosDisponibles.isEmpty()){
+            LOGGER.info("Listado de instrumentos: {}", instrumentosDisponibles);
+      return instrumentosDisponibles.stream().map(this::maptoDtoSalidaAInstrumentoDisponible).collect(Collectors.toList());
+        }else{
+            LOGGER.info("No existen coincidencias con el nombre ingresado");
+            throw new ResourceNotFoundException("No existen coincidencias con el nombre ingresado");
+        }
+         
+     }
+
 
     private UsuarioReservaSalidaDto usuarioSalidaDtoASalidaReservaDto(Long id) throws ResourceNotFoundException {
         return modelMapper.map(usuarioService.buscarUsuarioPorId(id), UsuarioReservaSalidaDto.class);
@@ -147,7 +168,11 @@ public class ReservaService implements IReservaService {
     private Instrumento maptoDtoSalidaAInstrumento(InstrumentoSalidaDto instrumentoSalidaDTO) {
         return modelMapper.map(instrumentoSalidaDTO, Instrumento.class);
     }
+    private InstrumentoSalidaDto maptoDtoSalidaAInstrumentoDisponible(Instrumento instrumento) {
+        return modelMapper.map(instrumento, InstrumentoSalidaDto.class);
+    }
 
+      
     
 
 

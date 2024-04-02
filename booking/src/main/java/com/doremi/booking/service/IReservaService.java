@@ -1,6 +1,8 @@
 package com.doremi.booking.service;
 
 import com.doremi.booking.dto.entrada.reseva.ReservaEntradaDto;
+import com.doremi.booking.dto.salida.instrumento.InstrumentoSalidaDto;
+import com.doremi.booking.dto.salida.reserva.InstrumentoReservaSalidaDto;
 import com.doremi.booking.dto.salida.reserva.ReservaSalidaDto;
 import com.doremi.booking.entity.Reserva;
 import com.doremi.booking.exceptions.BadRequestException;
@@ -14,4 +16,8 @@ public interface IReservaService {
     ReservaSalidaDto reservarInstrumento (ReservaEntradaDto reserva) throws BadRequestException, ResourceNotFoundException;
 
     List<ReservaSalidaDto> listarReservas () throws ResourceNotFoundException ;
+    
+    List<InstrumentoSalidaDto> buscarInstrumentosDisponibles(String nombre, LocalDate fechaInicial, LocalDate fechaFinal) throws ResourceNotFoundException;
+
+
 }

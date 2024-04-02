@@ -31,7 +31,6 @@ public class ReservaController {
     private IReservaService reservaService;
 
     @Autowired
-
     public ReservaController(IReservaService reservaService) {
         this.reservaService = reservaService;
     }
@@ -64,6 +63,21 @@ public class ReservaController {
     @GetMapping("listar")
     public ResponseEntity<List<ReservaSalidaDto>> listarReservas() throws ResourceNotFoundException {
         return new ResponseEntity<>(reservaService.listarReservas(), HttpStatus.OK);
+    }
+    @Operation(summary = "Listado de reservas disponibles")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Listado de reservas disponibles obtenido correctamente",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = InstrumentoSalidaDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Server error",
+                    content = @Content)
+    })
+    @GetMapping("/buscarDisponibilidad/{nombre}/{fechaInicial}/{fechaFinal}")
+    public ResponseEntity<?> buscarInstrumentosDisponibles(@PathVariable String nombre, @PathVariable LocalDate fechaInicial,
+    @PathVariable LocalDate fechaFinal) throws ResourceNotFoundException {
+        return new ResponseEntity<> (reservaService.buscarInstrumentosDisponibles(nombre, fechaInicial, fechaFinal), HttpStatus.OK);
     }
 
 

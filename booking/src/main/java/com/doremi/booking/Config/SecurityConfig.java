@@ -35,7 +35,7 @@ public class SecurityConfig {
                  "/instrumentos/buscarPorId/**", "reservas/listar", "/usuario/buscarPorId/**", "/reservas/buscarReservaPorFecha/**").permitAll()
                 .requestMatchers("/accion/**","/categoria/agregar","/categoria/eliminar/**",
                  "/instrumentos/agregar", "/instrumentos/eliminar/**", "/instrumentos/modificar",
-                 "/instrumentos/listar","/usuario/listar","/usuario/cambioRole").hasAuthority("ADMIN")
+                 "/instrumentos/listar","/usuario/listar","/usuario/cambioRole", "/reservas/buscarDisponibilidad/**").hasAuthority("ADMIN")
                  .requestMatchers("/usuario/buscarPorUsername/**").hasAnyAuthority("ADMIN", "USER")
                             .requestMatchers("/reservas/agregar").hasAuthority("USER")
                 .anyRequest().authenticated()
