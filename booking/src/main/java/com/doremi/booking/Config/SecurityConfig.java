@@ -32,7 +32,8 @@ public class SecurityConfig {
                 .requestMatchers("/auth/**",
                 "/categoria/listar" , "/instrumentos/listaraleatorios", 
                 "/instrumentos/buscarPorKeyWord/**","/instrumentos/buscarPorNombre/**",
-                 "/instrumentos/buscarPorId/**", "reservas/listar", "/usuario/buscarPorId/**", "/usuario/buscarPorUsername/**").permitAll()
+                 "/instrumentos/buscarPorId/**", "reservas/listar", "/usuario/buscarPorId/**", "/instrumentos/buscarDisponibilidad/**", "/usuario/buscarPorUsername/**").permitAll()
+
                 .requestMatchers("/accion/**","/categoria/agregar","/categoria/eliminar/**",
                  "/instrumentos/agregar", "/instrumentos/eliminar/**", "/instrumentos/modificar",
                  "/instrumentos/listar","/usuario/listar","/usuario/cambioRole").hasAuthority("ADMIN")

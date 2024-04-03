@@ -3,10 +3,12 @@ package com.doremi.booking.service;
 import com.doremi.booking.dto.entrada.instrumento.InstrumentoEntradaDto;
 import com.doremi.booking.dto.entrada.modificacion.InstrumentoModificacionEntradaDto;
 import com.doremi.booking.dto.salida.instrumento.InstrumentoSalidaDto;
+import com.doremi.booking.entity.Instrumento;
 import com.doremi.booking.exceptions.ResourceNotCreatedException;
 import com.doremi.booking.exceptions.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IInstrumentoService {
@@ -27,4 +29,6 @@ public interface IInstrumentoService {
 
 
     List<InstrumentoSalidaDto> buscarInstrumentosPorNombre(String nombre) throws ResourceNotFoundException;
+
+    List<InstrumentoSalidaDto> buscarInstrumentosDisponibles(String palabraClave, LocalDate fechaInicial, LocalDate fechaFinal) throws ResourceNotFoundException;
 }

@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -181,6 +182,21 @@ public class InstrumentoController {
     @PutMapping("modificar")
     public ResponseEntity<InstrumentoSalidaDto> modificarInstrumento(@Valid @RequestBody InstrumentoModificacionEntradaDto instrumentoModificado) throws ResourceNotCreatedException, ResourceNotFoundException {
         return new ResponseEntity<>(instrumentoService.modificarInstrumento(instrumentoModificado), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Listado de reservas disponibles")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Listado de reservas disponibles obtenido correctamente",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = InstrumentoSalidaDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Bad Request",
+                    content = @Content),
+            @ApiResponse(responseCode = "500", description = "Server error",
+                    content = @Content)
+    })
+    @GetMapping("/buscarDisponibilidad/{palabraClave}/{fechaInicial}/{fechaFinal}")
+    public ResponseEntity<?> buscarInstrumentosDisponibles(@PathVariable String palabraClave, @PathVariable LocalDate fechaInicial, @PathVariable LocalDate fechaFinal) throws ResourceNotFoundException {
+        return new ResponseEntity<> (instrumentoService.buscarInstrumentosDisponibles(palabraClave,fechaInicial, fechaFinal), HttpStatus.OK);
     }
 
 }
