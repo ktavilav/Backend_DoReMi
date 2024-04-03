@@ -1,4 +1,6 @@
 package com.doremi.booking.repository;
+import com.doremi.booking.dto.salida.reserva.ReservaSalidaDto;
+
 import com.doremi.booking.dto.salida.instrumento.InstrumentoSalidaDto;
 import com.doremi.booking.entity.Instrumento;
 import com.doremi.booking.entity.Reserva;

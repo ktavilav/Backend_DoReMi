@@ -52,6 +52,7 @@ public class ReservaService implements IReservaService {
         this.usuarioService = usuarioService;
     }
 
+
     
 
    /*@Override
@@ -59,6 +60,7 @@ public class ReservaService implements IReservaService {
         List<Reserva> reservas = reservaRepository.findByInstrumento_IdAndFechaInicialBetweenAndFechaFinalBetween(instrumentoId, fechaInicial, fechaFinal);
         return reservas.isEmpty();
     }*/
+
 
 
     @Override
@@ -114,6 +116,30 @@ public class ReservaService implements IReservaService {
                 })
                 .filter(Objects::nonNull)
                 .toList();
+    }
+    @Transactional
+    @Override
+    public List<ReservaSalidaDto> buscarReservasPorInstrumento(Long instrumentoId) throws ResourceNotFoundException {
+
+        InstrumentoSalidaDto instrumento = instrumentoService.buscarInstrumentoPorId(instrumentoId);
+        List<Reserva> reservasInstrumento = reservaRepository.findReservasByInstrumento(maptoDtoSalidaAInstrumento(instrumento));
+
+        if(!reservasInstrumento.isEmpty()){
+            return reservasInstrumento.stream()
+                    .map(reserva ->{
+                        try {
+                            return entidadADtoSalida(reserva);
+                        }catch (ResourceNotFoundException e){
+                            LOGGER.error("Error al convertir reserva a DTO: {}", e.getMessage());
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .toList();
+        } else{
+            LOGGER.error("El instrumento con el ID: {} no tiene reservas", instrumentoId);
+            throw new ResourceNotFoundException("El instrumento con el ID: " +instrumentoId + " no tiene reservas");
+        }
     }
 
     public Reserva mapDtoEntradaAEntidad(ReservaEntradaDto reservaEntradaDto) throws ResourceNotFoundException {
