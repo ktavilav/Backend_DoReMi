@@ -23,6 +23,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -188,6 +189,19 @@ public class InstrumentoService implements IInstrumentoService {
         List<Instrumento> instrumentosAleatorios = listaInstrumentos.subList(0, Math.min(10, listaInstrumentos.size()));
         LOGGER.info("Listado de instrumentos aleatorios: {}", instrumentosAleatorios);
         return instrumentosAleatorios.stream().map(this::maptoDtoSalida).toList();
+    }
+
+    @Override
+    public List<InstrumentoSalidaDto> buscarInstrumentosDisponibles(String palabraClave, LocalDate fechaInicial, LocalDate fechaFinal) throws ResourceNotFoundException {
+        List<Instrumento> instrumentosDisponibles = instrumentoRepository.findAvailableInstrumentosByKeywordAndDates(palabraClave, fechaInicial, fechaFinal);
+        if(!instrumentosDisponibles.isEmpty()){
+            LOGGER.info("Listado de instrumentos: {}", instrumentosDisponibles);
+            return instrumentosDisponibles.stream().map(this::maptoDtoSalida).toList();
+        }else{
+            LOGGER.info("No existen coincidencias con el nombre ingresado");
+            throw new ResourceNotFoundException("No existen coincidencias con el nombre ingresado");
+        }
+
     }
 
     public Instrumento maptoEntity(InstrumentoEntradaDto instrumentoEntradaDto) {
