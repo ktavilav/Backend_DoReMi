@@ -37,6 +37,7 @@ public class Instrumento {
         this.precioDia = precioDia;
         this.imagenes = imagenes;
     }
+
     public Instrumento(Long instrumento_id) {
         this.instrumento_id = instrumento_id;
     }

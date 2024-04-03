@@ -131,19 +131,6 @@ public class ReservaService implements IReservaService {
 
         return reserva;
     }
-    @Override
-     public List<InstrumentoSalidaDto> buscarInstrumentosDisponibles(String nombre, LocalDate fechaInicial, LocalDate fechaFinal) throws ResourceNotFoundException {
-         List<Instrumento> instrumentosDisponibles = reservaRepository.findInstrumentosDisponibles(nombre, fechaInicial, fechaFinal);
-         if(!instrumentosDisponibles.isEmpty()){
-            LOGGER.info("Listado de instrumentos: {}", instrumentosDisponibles);
-      return instrumentosDisponibles.stream().map(this::maptoDtoSalidaAInstrumentoDisponible).collect(Collectors.toList());
-        }else{
-            LOGGER.info("No existen coincidencias con el nombre ingresado");
-            throw new ResourceNotFoundException("No existen coincidencias con el nombre ingresado");
-        }
-         
-     }
-
 
     private UsuarioReservaSalidaDto usuarioSalidaDtoASalidaReservaDto(Long id) throws ResourceNotFoundException {
         return modelMapper.map(usuarioService.buscarUsuarioPorId(id), UsuarioReservaSalidaDto.class);
